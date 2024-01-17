@@ -1,5 +1,6 @@
 import tkinter as tk
 import customtkinter as ctk
+import data_processing as dp
 
 def clear_frame(frame):
    for widgets in frame.winfo_children():
@@ -16,5 +17,8 @@ window.title("Job recommendation")
 mainframe = ctk.CTkFrame(window)
 mainframe.pack(fill="both", expand=True)
 
+evidence, labels = dp.load_data("job_profiles.csv")
+
 
 window.mainloop()
+
