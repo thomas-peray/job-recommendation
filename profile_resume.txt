@@ -1,7 +1,4 @@
 Experience : "2 Years"
 Qualifications : "B.Com"
 Salary Range : "80.0"
-location : "Berlin"
-Country : "Germany"
-Work Type : "Full Time"
-Sexe : "Female"
+Skills : "Frontend"
