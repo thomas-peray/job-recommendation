@@ -1,5 +1,6 @@
 import tkinter as tk
 import customtkinter as ctk
+import job_recommender as jr
 
 def clear_frame(frame):
    for widgets in frame.winfo_children():
@@ -9,8 +10,46 @@ def clear_frame(frame):
 def launch_interface():
     
     def search():
-        pass
-    
+        # Reset the result frame
+        clear_frame(scrollable_frame)
+        
+        experience_min = min_year_exp.get()
+        experience_max = max_year_exp.get()
+        experience = f"{experience_min} to {experience_max} Years"
+        
+        qualifications = qualifications_cbox.get()
+
+        salary_min = min_salary.get()
+        salary_max = max_salary.get()
+        salary_range = f"${salary_min}K-${salary_max}K"
+        
+        skills = entry_skills.get()
+        
+        profile = {
+            'Experience': experience,
+            'Qualifications': qualifications,
+            'Salary Range': salary_range,
+            'Skills': skills,
+        }
+        
+        predictions = jr.predict(profile)
+        
+        for p in predictions:
+            result_frame = ctk.CTkFrame(scrollable_frame)
+            result_frame.pack(fill="x", side="top", pady=8)
+            
+            label_title = ctk.CTkLabel(result_frame, text=p['Job Title'], font=("Roboto", 14))
+            label_title.pack(pady=4, side="top")
+            
+            infos = p["Salary Range"] + " · " + p["Experience"]
+            label_infos = ctk.CTkLabel(result_frame, text=infos, font=("Roboto", 14))
+            label_infos.pack(pady=4, side="top")
+            
+            label_description = ctk.CTkLabel(result_frame, text=p['Job Description'], font=("Roboto", 12))
+            label_description.pack(pady=4, side="top")
+        
+            
+
     ctk.set_appearance_mode("system")
     ctk.set_default_color_theme("dark-blue")
 
@@ -41,7 +80,7 @@ def launch_interface():
     min_year_exp = ctk.CTkComboBox(experience_frame, values=min_years)
     min_year_exp.pack(side="left")
     
-    label_to= ctk.CTkLabel(experience_frame, text="to", font=("Roboto", 12))
+    label_to = ctk.CTkLabel(experience_frame, text="to", font=("Roboto", 12))
     label_to.pack(padx=12, side="left")
     
     max_years = [str(i) for i in range(5, 16)]
@@ -75,71 +114,29 @@ def launch_interface():
     max_salary = ctk.CTkEntry(salary_frame, placeholder_text="Max range (in $K)")
     max_salary.pack(side="left")
     
-    # === Location ===
-    location_frame = ctk.CTkFrame(input_frame)
-    location_frame.pack(fill="x", side="left", padx=8)
+    # === Skills ===
+    skills_frame = ctk.CTkFrame(input_frame)
+    skills_frame.pack(fill="x", side="left", padx=8)
     
-    label_loc = ctk.CTkLabel(location_frame, text="Location", font=("Roboto", 14))
-    label_loc.pack(pady=12, padx=10, side="top")
+    label_skills = ctk.CTkLabel(skills_frame, text="Skills", font=("Roboto", 14))
+    label_skills.pack(pady=12, padx=10, side="top")
     
-    entry_location = ctk.CTkEntry(location_frame, placeholder_text="Douglas, New York, ...")
-    entry_location.pack(side="left")
+    entry_skills = ctk.CTkEntry(skills_frame, placeholder_text="some skills, with space between",  width=200)
+    entry_skills.pack(side="left")
     
-    # === Country ===
-    input_frame2 = ctk.CTkFrame(mainframe)
-    input_frame2.pack(fill="x", side="top")
+    # === Search button ===
+    search_frame = ctk.CTkFrame(mainframe)
+    search_frame.pack(fill="x", side="top")
     
-    country_frame = ctk.CTkFrame(input_frame2)
-    country_frame.pack(fill="x", side="left")
-    
-    label_country = ctk.CTkLabel(country_frame, text="Country", font=("Roboto", 14))
-    label_country.pack(pady=12, padx=10, side="top")
-    
-    entry_country = ctk.CTkEntry(country_frame, placeholder_text="France, Spain, ...")
-    entry_country.pack(side="left")
-    
-    # === Work type ===
-    work_type_frame = ctk.CTkFrame(input_frame2)
-    work_type_frame.pack(fill="x", side="left", padx=8)
-    
-    label_wt = ctk.CTkLabel(work_type_frame, text="Work type", font=("Roboto", 14))
-    label_wt.pack(pady=12, padx=10, side="top")
-    
-    work_types = ["Contract", "Full-time", "Intern" "Part-time", "Temporary"]
-    work_types_cb = ctk.CTkComboBox(work_type_frame, values=work_types)
-    work_types_cb.pack(side="left")
-    
-    # === Company size ===    
-    company_size_frame = ctk.CTkFrame(input_frame2)
-    company_size_frame.pack(fill="x", side="left")
-    
-    label_cs = ctk.CTkLabel(company_size_frame, text="Compagny Size", font=("Roboto", 14))
-    label_cs.pack(pady=12, padx=10, side="top")
-    
-    company_size = ["Small (12,000 to 40,000)", "Medium (40,000 to 100,000)", "Large (100,000+)"]
-    company_size_cb = ctk.CTkComboBox(company_size_frame, values=company_size)
-    company_size_cb.pack(side="left")
-    
-    # === Genre ===
-    genre_frame = ctk.CTkFrame(input_frame2)
-    genre_frame.pack(fill="x", side="left", padx=8)
-    
-    label_cs = ctk.CTkLabel(genre_frame, text="Genre", font=("Roboto", 14))
-    label_cs.pack(pady=12, padx=10, side="top")
-    
-    genres = ["Female", "Male"]
-    genre_cb = ctk.CTkComboBox(genre_frame, values=genres)
-    genre_cb.pack(side="left")
-    
-    btn_search = ctk.CTkButton(input_frame2, text="Search", command=search)
-    btn_search.pack(pady=12, padx=10, side="right")
+    search_button = ctk.CTkButton(search_frame, text="Search", command=search)
+    search_button.pack(pady=12, padx=10, side="top")
+
     
     # === Job results
-    label_jr = ctk.CTkLabel(mainframe, text="Job recommended", font=("Roboto", 14))
+    label_jr = ctk.CTkLabel(mainframe, text="Job recommended (take about 10 second to process, please wait after clicking Search)", font=("Roboto", 14))
     label_jr.pack(pady=12, padx=10, side="top")
     
     scrollable_frame = ctk.CTkScrollableFrame(mainframe, width=200, height=400)
     scrollable_frame.pack(fill="x", side="top")
-        
 
     window.mainloop()
