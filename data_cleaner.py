@@ -1,3 +1,19 @@
+"""
+Job Profiles Data Cleaner
+
+This script cleans and processes a dataset of job profiles. It uses pandas for data manipulation, re for regular expression operations, and nltk for natural language processing.
+
+The script requires the following Python packages: pandas, re, and nltk.
+
+The script assumes that there is a CSV file named 'job_profiles.csv' in the same directory. This file should contain job profiles.
+
+Functions:
+    convert_salary(value)
+    convert_size(value)
+    exp_to_range(exp)
+    convert_experience(value)
+"""
+
 import pandas as pd
 import re
 import nltk
@@ -11,8 +27,15 @@ df = pd.read_csv('job_profiles.csv')
 # Define English stopwords
 stopw = set(stopwords.words('english'))
 
+"""
+    Convert the salary range into a single average value.
 
-# Define conversion functions
+    Parameters:
+        value (str): The salary range.
+
+    Returns:
+        int: The average salary.
+"""
 def convert_salary(value):
     if 'Unknown' in value:
         return None
@@ -31,7 +54,15 @@ def convert_salary(value):
     else:
         return int(re.findall(r'\$\d+K', value)[0].replace('$', '').replace('K', ''))
 
+"""
+    Convert the company size into a single average value.
 
+    Parameters:
+        value (str): The company size.
+
+    Returns:
+        int: The average company size.
+"""
 def convert_size(value):
     if isinstance(value, int):
         return value
@@ -45,7 +76,15 @@ def convert_size(value):
     else:
         return int(value.replace('+', '').replace(',', '').split()[0])
 
+"""
+    Convert the experience range into a tuple of minimum and maximum values.
 
+    Parameters:
+        exp (str): The experience range.
+
+    Returns:
+        tuple: The minimum and maximum experience.
+"""
 def exp_to_range(exp: str) -> (int, int):
     exp = exp[0:len(exp) - 6]
     exp_split = exp.split(" to ")
@@ -53,7 +92,15 @@ def exp_to_range(exp: str) -> (int, int):
     max_range = int(exp_split[1])
     return min_range, max_range
 
+"""
+    Convert the experience range into a tuple of minimum and maximum values.
 
+    Parameters:
+        value (str): The experience range.
+
+    Returns:
+        tuple: The minimum and maximum experience.
+"""
 def convert_experience(value):
     if 'Unknown' in value:
         return None

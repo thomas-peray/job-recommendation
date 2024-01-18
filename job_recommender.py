@@ -1,3 +1,16 @@
+"""
+Job Recommender System
+
+This script recommends jobs based on a user's resume. It uses Natural Language Processing (NLP) techniques to compare the user's resume with job descriptions in a dataset.
+
+The script requires the following Python packages: pandas, re, ftfy, sklearn, and nltk.
+
+The script assumes that there is a CSV file named 'structured_data.csv' in the same directory. This file should contain job descriptions. It also assumes that there is a text file named 'profile_resume.txt' containing the user's resume.
+
+Functions:
+    ngrams(string, n=3)
+    getNearestN(query)
+"""
 import re
 from ftfy import fix_text
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -39,7 +52,18 @@ resume_df = pd.DataFrame([resume_info])
 resume_text = f"{experience} {qualifications} {salary_range} {skills}"
 
 
+"""
+    Process a string and generate n-grams.
+
+    Parameters:
+        string (str): The string to process.
+        n (int, optional): The number of items in each n-gram. Defaults to 3.
+
+    Returns:
+        list: A list of n-grams.
+"""
 def ngrams(string, n=3):
+
     string = fix_text(string)  # fix text
     string = string.encode("ascii", errors="ignore").decode()  # remove non-ascii chars
     string = string.lower()
@@ -63,6 +87,15 @@ tfidf = vectorizer.fit_transform([resume_text])
 nbrs = NearestNeighbors(n_neighbors=1, n_jobs=-1).fit(tfidf)
 jd_test = jd_df['Job Description'].astype('U').values
 
+"""
+    Find the nearest neighbors of a query.
+
+    Parameters:
+        query (list): The query to find the nearest neighbors of.
+
+    Returns:
+        tuple: A tuple containing the distances and indices of the nearest neighbors.
+"""
 
 def getNearestN(query):
     queryTFIDF_ = vectorizer.transform(query)
