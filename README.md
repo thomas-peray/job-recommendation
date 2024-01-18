@@ -1,5 +1,5 @@
 # Job recommendation
-The objective of this project is to to develop a system that recommends jobs to users based on their profiles and preferences using machine learning techniques.
+The objective of this project is to develop a system that recommends jobs to users based on their profiles and preferences using machine learning techniques.
 
 ## Authors
  - Thomas Peray | [@thomas-peray](https://github.com/thomas-peray) - [@thmspry](https://github.com/thmspry)
