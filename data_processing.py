@@ -1,6 +1,29 @@
+"""
+Data Processing for Job Profiles
+
+This script processes a dataset of job profiles. It uses the csv module to read the data.
+
+The script requires the Python csv module.
+
+The script assumes that there is a CSV file in the specified filepath. This file should contain job profiles.
+
+Functions:
+    exp_to_range(exp)
+    salary_to_range(salary)
+    genre_to_int(genre)
+    load_data(filepath)
+"""
 import csv
 
+"""
+    Convert the experience range into a tuple of minimum and maximum values.
 
+    Parameters:
+        exp (str): The experience range.
+
+    Returns:
+        tuple: The minimum and maximum experience.
+"""
 def exp_to_range(exp: str) -> (int, int):
     exp = exp[0:len(exp) - 6]
     exp_split = exp.split(" to ")
@@ -8,7 +31,15 @@ def exp_to_range(exp: str) -> (int, int):
     max_range = int(exp_split[1])
     return min_range, max_range
 
+"""
+    Convert the salary range into a tuple of minimum and maximum values.
 
+    Parameters:
+        salary (str): The salary range.
+
+    Returns:
+        tuple: The minimum and maximum salary.
+"""
 def salary_to_range(salary: str) -> (int, int):
     salary = salary[1:len(salary) - 1]
     salary_split = salary.split("K-$")
@@ -16,11 +47,27 @@ def salary_to_range(salary: str) -> (int, int):
     max_range = int(salary_split[1])
     return min_range, max_range
 
+"""
+    Convert the genre into an integer.
 
+    Parameters:
+        genre (str): The genre.
+
+    Returns:
+        int: The integer representation of the genre.
+"""
 def genre_to_int(genre: str) -> int:
     return 0 if genre == "Female" else 1
 
+"""
+    Load the data from a CSV file.
 
+    Parameters:
+        filepath (str): The path to the CSV file.
+
+    Returns:
+        tuple: A tuple containing two lists. The first list contains the evidence (features) and the second list contains the labels (targets).
+"""
 def load_data(filepath: str) -> (list, list):
     evidence: str = []
     labels: str = []

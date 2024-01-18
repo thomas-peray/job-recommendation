@@ -1,3 +1,16 @@
+"""
+Job Recommender System
+
+This script recommends jobs based on a user's resume. It uses Natural Language Processing (NLP) techniques to compare the user's resume with job descriptions in a dataset.
+
+The script requires the following Python packages: pandas, re, ftfy, sklearn, and nltk.
+
+The script assumes that there is a CSV file named 'structured_data.csv' in the same directory. This file should contain job descriptions. It also assumes that there is a text file named 'profile_resume.txt' containing the user's resume.
+
+Functions:
+    ngrams(string, n=3)
+    getNearestN(query)
+"""
 import re
 from ftfy import fix_text
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -6,6 +19,16 @@ import pandas as pd
 
 
 def predict(profile: dict):
+    
+    """
+        Find the nearest neighbors of a query.
+
+        Parameters:
+            query (list): The query to find the nearest neighbors of.
+
+        Returns:
+            tuple: A tuple containing the distances and indices of the nearest neighbors.
+    """
     def getNearestN(query):
         queryTFIDF = vectorizer.transform(query)
         distances, indices = nbrs.kneighbors(queryTFIDF)
@@ -47,6 +70,7 @@ def predict(profile: dict):
     
     
 def ngrams(string, n=3):
+
     string = fix_text(string)  # fix text
     string = string.encode("ascii", errors="ignore").decode()  # remove non-ascii chars
     string = string.lower()
@@ -64,3 +88,8 @@ def ngrams(string, n=3):
     return [''.join(ngram) for ngram in ngrams]
 
 
+
+def getNearestN(query):
+    queryTFIDF_ = vectorizer.transform(query)
+    distances, indices = nbrs.kneighbors(queryTFIDF_)
+    return distances, indices
