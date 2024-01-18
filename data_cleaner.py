@@ -46,7 +46,26 @@ def convert_size(value):
         return int(value.replace('+', '').replace(',', '').split()[0])
 
 
+def exp_to_range(exp: str) -> (int, int):
+    exp = exp[0:len(exp) - 6]
+    exp_split = exp.split(" to ")
+    min_range = int(exp_split[0])
+    max_range = int(exp_split[1])
+    return min_range, max_range
+
+
+def convert_experience(value):
+    if 'Unknown' in value:
+        return None
+    elif ' to ' in value:
+        return exp_to_range(value)
+    else:
+        exp_value = int(value.replace(' Years', ''))
+        return exp_value, exp_value
+
+
 # Apply conversion functions
+df['Experience'] = df['Experience'].apply(convert_experience)
 df['Salary Range'] = df['Salary Range'].apply(convert_salary)
 df['Company Size'] = df['Company Size'].apply(convert_size)
 

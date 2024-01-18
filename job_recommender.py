@@ -19,13 +19,12 @@ with open(file_path, 'r') as file:
     resume_content = file.read()
 
 # Extract information from the structured text file
-experience = re.search(r'Experience\s*:\s*"([^"]*)"', resume_content).group(1)
+experience = re.search(r'Experience : "(\d+)', resume_content).group(1)
 qualifications = re.search(r'Qualifications\s*:\s*"([^"]*)"', resume_content).group(1)
 salary_range = re.search(r'Salary Range\s*:\s*"([^"]*)"', resume_content).group(1)
 location = re.search(r'location\s*:\s*"([^"]*)"', resume_content).group(1)
 country = re.search(r'Country\s*:\s*"([^"]*)"', resume_content).group(1)
 work_type = re.search(r'Work Type\s*:\s*"([^"]*)"', resume_content).group(1)
-company_size = re.search(r'Company Size\s*:\s*"([^"]*)"', resume_content).group(1)
 
 # Create a dictionary to represent the resume information
 resume_info = {
@@ -35,7 +34,6 @@ resume_info = {
     'location': location,
     'Country': country,
     'Work Type': work_type,
-    'Company Size': company_size
 }
 
 # Convert the dictionary to a DataFrame
@@ -77,7 +75,5 @@ distances, indices = getNearestN(jd_test)
 matches_df = pd.DataFrame({'Match confidence': distances.flatten()})
 jd_df['Match confidence'] = matches_df['Match confidence']
 recommended_jobs = jd_df.sort_values('Match confidence').head(5)
-print(recommended_jobs[
-          ['Experience', 'Qualifications', 'Salary Range', 'location', 'Country', 'Work Type', 'Preference',
-           'Job Title', 'Role', 'Job Description', 'Benefits', 'skills', 'Responsibilities',
-           'Match confidence']])
+pd.set_option('display.max_columns', None)
+print(recommended_jobs.head(5))
